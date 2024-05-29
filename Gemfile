@@ -10,6 +10,9 @@ gem "sprockets-rails"
 gem "importmap-rails"
 gem "jbuilder"
 
+gem "graphql", "~> 2.3"
+gem "graphiql-rails", group: :development
+
 gem "bootsnap", require: false
 
 group :development, :test do
