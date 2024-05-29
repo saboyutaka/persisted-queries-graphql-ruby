@@ -1,0 +1,5 @@
+{
+  "bfa62138163a76dca4f6c317779a0954b768b00e9268f6639db90d78633986aa": "query Query1 {\n  __typename\n}",
+  "8ad5e6bbab31193c192eb68ed4187026486a3a51541825e7d0c2c6a334559e14": "query HelloQuery {\n  testField\n}",
+  "d020631ba2da76821646d798387621cabfc709e911aa263e25c833119fb627ad": "mutation TestMutation {\n  testField\n}"
+}
