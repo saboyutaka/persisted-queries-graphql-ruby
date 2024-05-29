@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "codegen": "./node_modules/.bin/gql-gen --overwrite"
+  },
+  "devDependencies": {
+    "graphql-code-generator": "^0.18.2",
+    "graphql-codegen-persisted-query-ids": "^0.1.2"
+  },
+  "dependencies": {
+    "graphql": "^14.7.0"
+  }
+}
