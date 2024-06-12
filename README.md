@@ -14,19 +14,42 @@ https://benjie.dev/graphql/trusted-documents
 **参照**
 - https://www.youtube.com/watch?v=ZZ5PF3_P_r4
 
-## 構築
-```bash
-# gem をinstall
-bundle install
+## サーバーの実装
+GraphqlController でPersisted Queriesを受け付けるように実装します。
 
-# Railsを起動する
-bin/rails s
+- `PERSISTED_QUERIES` に事前に作成したクエリを読み込む
+- クエリは `extensions.persistedQuery.sha256Hash` の値から `PERSISTED_QUERIES` に登録されたクエリを取得する
+- 本番環境ではPersisted Queryのみを受け付ける
+- またMutationはPOSTでのみ受け付ける
 
-# Railsを起動する(Persisted Queryのみを受け付けるようにする場合)
-GRAPHQL_PERSISTED_QUERY_REQUIRED=1 bin/rails s
+```diff
+ class GraphqlController < ApplicationController
++  PERSISTED_QUERIES = JSON.parse(File.read(Rails.root.join('persisted-query-ids', 'server.json')))
+ 
+   def execute
++    if params[:query] && (Rails.env.production? || ENV['GRAPHQL_PERSISTED_QUERY_REQUIRED'].present?)
++      return render json: { errors: [{ message: 'Query is not allowed. Use query hash instead.' }], data: {} }, status: 400
++    end
+ 
++    query_hash = context[:extensions]&.dig('persistedQuery', 'sha256Hash')
++    query = PERSISTED_QUERIES[query_hash] || params[:query]
+-    query = params[:query]
+ 
++    if query.present? && request.method == 'GET' && query.start_with?('mutation')
++      return render json: { errors: [{ message: 'Mutation must be requested with POST.' }], data: {} }, status: 400
++    end
+ 
+     variables = prepare_variables(params[:variables])
+     operation_name = params[:operationName]
+     context = {}
+     result = Schema.execute(query, variables:, context:, operation_name:)
+     render json: result
+   rescue StandardError => e
+     raise e unless Rails.env.development?
+     handle_error_in_development(e)
+   end
+ end
 ```
-
-http://localhost:3000/graphql にアクセスする
 
 ## クエリの生成
 0. npm installを実行する
@@ -41,7 +64,7 @@ npm install
 npm run codegen
 ```
 
-## 生成された server.json
+### 生成された server.json
 ```json
 {
   "bfa62138163a76dca4f6c317779a0954b768b00e9268f6639db90d78633986aa": "query Query1 {\n  __typename\n}",
@@ -92,6 +115,19 @@ curl --get http://localhost:3000/graphql \
 
 ```
 
+## 環境構築
+```bash
+# gem をinstall
+bundle install
+
+# Railsを起動する
+bin/rails s
+
+# Railsを起動する(Persisted Queryのみを受け付けるようにする場合)
+GRAPHQL_PERSISTED_QUERY_REQUIRED=1 bin/rails s
+```
+
+http://localhost:3000/graphql にアクセスする
 
 ## 環境
 macOS上にruby, nodeがインストールされていることを前提としています。 
