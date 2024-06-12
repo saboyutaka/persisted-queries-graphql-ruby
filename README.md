@@ -53,7 +53,6 @@ curl -X POST 'http://localhost:3000/graphql' \
 
 ## Persisted Query with GET data-urlencode
 curl --get http://localhost:3000/graphql \
-  -H 'content-type: application/json' \
   --data-urlencode 'extensions={"persistedQuery":{"version":1,"sha256Hash":"bfa62138163a76dca4f6c317779a0954b768b00e9268f6639db90d78633986aa"}}' \
   --data-urlencode 'operationName=Query1'
 
@@ -80,7 +79,6 @@ curl -X POST 'http://localhost:3000/graphql' \
 
 # Persisted Query Mutation with GET param (Failure Case)
 curl --get http://localhost:3000/graphql \
-  -H 'content-type: application/json' \
   --data-urlencode 'extensions={"persistedQuery":{"version":1,"sha256Hash":"d020631ba2da76821646d798387621cabfc709e911aa263e25c833119fb627ad"}}' \
   --data-urlencode 'operationName=TestMutation'
 
