@@ -1,6 +1,8 @@
-# Trusted Queries with graphql-ruby & Ruby on Rails
+# Persisted Queries with graphql-ruby & Ruby on Rails
 
-graphql-rubyを実装したRuby on Rails で事前に作成したクエリのみを許可するTrusted Document(Persisted Query)のProof of Conceptを実装するためのコードサンプルです。
+graphql-rubyを実装したRuby on Rails で事前に作成したクエリのみを許可するTrusted Document(Persisted Queries)のProof of Conceptを実装するためのコードサンプルです。
+
+APQ(Automatic Persisted Queries) を実装するための [DmitryTsepelev/graphql-ruby-persisted_queries](https://github.com/DmitryTsepelev/graphql-ruby-persisted_queries) とは異なり、事前に作成したクエリのみを実行許可します。
 
 `graphql-codegen-persisted-query-ids` を使用し、クライアントアプリで使用するクエリを事前に生成し、サーバー側でそのQueryのみを許可するようにします。
 
